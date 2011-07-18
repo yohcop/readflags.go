@@ -58,3 +58,12 @@ func TestIgnoreComments(t *testing.T) {
     t.Error("Flag not set: " + string(*b))
   }
 }
+
+
+func TestError(t *testing.T) {
+  file := "a = TestError\nnonexisting=asd"
+  if err := ReadFlags(file); err == nil {
+    t.Error("Error: noexisting flag should not exist")
+  }
+}
+
