@@ -1,6 +1,7 @@
 package readflags
 
 import (
+  "fmt"
   "flag"
   "io"
   "io/ioutil"
@@ -35,11 +36,11 @@ func ReadFlagsFromFile(file string) os.Error {
     for n, line := range lines {
       err := parseLine(line)
       if err != nil {
-        return os.NewError(err.String() + " (line " + string(n))
+        return fmt.Errorf("%s (line %d)", err.String(), n)
       }
       err = parseCommand(line, absPath)
       if err != nil {
-        return os.NewError(err.String() + " (line " + string(n))
+        return fmt.Errorf("%s (line %d)", err.String(), n)
       }
     }
   }
@@ -52,7 +53,7 @@ func ReadFlagsFromString(content string) os.Error {
   for n, line := range lines {
     err := parseLine(line)
     if err != nil {
-      return os.NewError(err.String() + " (line " + string(n))
+      return fmt.Errorf("%s (line %d)", err.String(), n)
     }
   }
   return nil
@@ -71,12 +72,12 @@ func parseLine(line string) os.Error {
   }
   pieces := strings.Split(line, "=", 2)
   if len(pieces) != 2 {
-    return os.NewError("readflags: misformatted line: " + line)
+    return fmt.Errorf("readflags: misformatted line: %s", line)
   }
   key := strings.TrimSpace(pieces[0])
   val := strings.TrimSpace(pieces[1])
   if !flag.Set(key, val) {
-    return os.NewError("readflags: no such flag: " + key)
+    return fmt.Errorf("readflags: no such flag: %s", key)
   }
   return nil
 }
