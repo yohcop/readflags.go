@@ -12,6 +12,7 @@ import (
 )
 
 
+// Reads the entire Reader and parse flags from it.
 func ReadFlags(reader io.Reader) os.Error {
   if content, err := ioutil.ReadAll(reader); err != nil {
     return err
@@ -21,6 +22,8 @@ func ReadFlags(reader io.Reader) os.Error {
   return nil
 }
 
+// Reads the file and parses flags from it. This also
+// understands the %include lines.
 func ReadFlagsFromFile(file string) os.Error {
   absPath, err := filepath.Abs(file)
   if err != nil {
@@ -47,6 +50,7 @@ func ReadFlagsFromFile(file string) os.Error {
   return nil
 }
 
+// Reads and sets flag from the given string.
 func ReadFlagsFromString(content string) os.Error {
   lines := strings.Split(content, "\n", -1)
 
@@ -91,7 +95,7 @@ func parseCommand(line string, path string) os.Error {
     return nil
   }
   if len(clean) < 10 {
-    return nil
+    return fmt.Errorf("readflags: %%include needs a file name")
   }
   if clean[1:8] == "include" {
     return ReadFlagsFromFile(path + "/" + clean[9:])

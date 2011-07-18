@@ -79,3 +79,10 @@ func TestFile(t *testing.T) {
     t.Error("Flag not set: " + string(*b))
   }
 }
+
+func TestFileError(t *testing.T) {
+  err := ReadFlagsFromFile("testdata/err.txt")
+  if err == nil {
+    t.Error("Error should have triggered")
+  }
+}

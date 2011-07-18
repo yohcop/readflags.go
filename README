@@ -1,0 +1,38 @@
+This package reads files formatted like:
+
+----
+# This is a comment
+# This includes the defaults.txt file which can define some flags too.
+%include defaults.txt
+
+# Define some flags here
+a_flag = flag_value
+port = 8080
+
+# Override more flags with this file.
+%include override.txt
+----
+
+Basically, 3 types of lines:
+- Starting with '#' are comments
+  Ignored.
+- Starting with '%' are commands
+  - The only command right no is 'include'. It reads the given file.
+    The path is relative to the file containing the command.
+    This only works when ReadFlagsFromFile is used.
+- flag = value
+  Sets the flag 'flag' to the given value
+
+
+There are 3 exported functions:
+- ReadFlags
+- ReadFlagsFromFile
+- ReadFlagsFromString
+
+As previously mentioned, only ReadFlagsFromFile reads the
+%include command correctly, as it does not makes sence when
+read from a string, or a io.Reader.
+
+Usage is hopefuly self explanatory. The only thing you should be
+careful with, is the order of calls. you should probably call
+ReadFlagsFrom*

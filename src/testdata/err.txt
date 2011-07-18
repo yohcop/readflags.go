@@ -1,0 +1,5 @@
+
+# This include line is broken
+%include
+
+a=foo
