@@ -1,0 +1,4 @@
+a = f1
+b = 111
+
+%include f2.txt

@@ -1,0 +1,3 @@
+a=f2
+
+%include subdir/f3.txt

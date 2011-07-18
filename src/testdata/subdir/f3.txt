@@ -1,0 +1,4 @@
+%include f4.txt
+
+# Overrides the a from f4.txt
+a=f3
