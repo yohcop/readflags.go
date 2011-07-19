@@ -36,4 +36,5 @@ read from a string, or a io.Reader.
 Usage is hopefuly self explanatory. The only thing you should be
 careful with, is the order of calls. you should probably call ReadFlags*
 functions before calling flags.Parse(), to let users override flags via command
-line.
+line. Except ReadFlags(), as it will call flags.Parse() as well. However, you
+can call flags.Parse() again after if you want.
