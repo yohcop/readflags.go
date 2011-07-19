@@ -12,8 +12,6 @@ import (
 )
 
 
-var readflagsfile *string = flag.String("readflagsfile", "", "File to read flags from")
-
 // Reads the entire Reader and parse flags from it.
 func ReadFlags(reader io.Reader) os.Error {
   if content, err := ioutil.ReadAll(reader); err != nil {
@@ -23,14 +21,6 @@ func ReadFlags(reader io.Reader) os.Error {
   }
   return nil
 }
-
-func ReadFile() os.Error {
-  if len(*readflagsfile) > 0 {
-    return ReadFlagsFromFile(*readflagsfile)
-  }
-  return nil
-}
-
 
 // Reads the file and parses flags from it. This also
 // understands the %include lines.
