@@ -78,7 +78,7 @@ func parseLine(line string) error {
   }
   key := strings.TrimSpace(pieces[0])
   val := strings.TrimSpace(pieces[1])
-  if !flag.Set(key, val) {
+  if flag.Set(key, val) != nil {
     return fmt.Errorf("readflags: no such flag: %s", key)
   }
   return nil
