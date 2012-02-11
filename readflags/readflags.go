@@ -1,19 +1,17 @@
 package readflags
 
 import (
-  "fmt"
   "flag"
+  "fmt"
   "io"
   "io/ioutil"
-  "os"
-  "strings"
   "path"
   "path/filepath"
+  "strings"
 )
 
-
 // Reads the entire Reader and parse flags from it.
-func ReadFlags(reader io.Reader) os.Error {
+func ReadFlags(reader io.Reader) error {
   if content, err := ioutil.ReadAll(reader); err != nil {
     return err
   } else {
@@ -24,7 +22,7 @@ func ReadFlags(reader io.Reader) os.Error {
 
 // Reads the file and parses flags from it. This also
 // understands the %include lines.
-func ReadFlagsFromFile(file string) os.Error {
+func ReadFlagsFromFile(file string) error {
   absPath, err := filepath.Abs(file)
   if err != nil {
     return err
@@ -35,15 +33,15 @@ func ReadFlagsFromFile(file string) os.Error {
     return err
   } else {
     content := string(bytes)
-    lines := strings.Split(content, "\n", -1)
+    lines := strings.Split(content, "\n")
     for n, line := range lines {
       err := parseLine(line)
       if err != nil {
-        return fmt.Errorf("%s (line %d)", err.String(), n)
+        return fmt.Errorf("%s (line %d)", err.Error(), n)
       }
       err = parseCommand(line, absPath)
       if err != nil {
-        return fmt.Errorf("%s (line %d)", err.String(), n)
+        return fmt.Errorf("%s (line %d)", err.Error(), n)
       }
     }
   }
@@ -51,19 +49,19 @@ func ReadFlagsFromFile(file string) os.Error {
 }
 
 // Reads and sets flag from the given string.
-func ReadFlagsFromString(content string) os.Error {
-  lines := strings.Split(content, "\n", -1)
+func ReadFlagsFromString(content string) error {
+  lines := strings.Split(content, "\n")
 
   for n, line := range lines {
     err := parseLine(line)
     if err != nil {
-      return fmt.Errorf("%s (line %d)", err.String(), n)
+      return fmt.Errorf("%s (line %d)", err.Error(), n)
     }
   }
   return nil
 }
 
-func parseLine(line string) os.Error {
+func parseLine(line string) error {
   clean := strings.TrimSpace(line)
   if len(clean) <= 0 {
     return nil
@@ -74,7 +72,7 @@ func parseLine(line string) os.Error {
   if clean[0] == '%' {
     return nil
   }
-  pieces := strings.Split(line, "=", 2)
+  pieces := strings.SplitN(line, "=", 2)
   if len(pieces) != 2 {
     return fmt.Errorf("readflags: misformatted line: %s", line)
   }
@@ -86,7 +84,7 @@ func parseLine(line string) os.Error {
   return nil
 }
 
-func parseCommand(line string, path string) os.Error {
+func parseCommand(line string, path string) error {
   clean := strings.TrimSpace(line)
   if len(clean) == 0 {
     return nil
@@ -102,4 +100,3 @@ func parseCommand(line string, path string) os.Error {
   }
   return nil
 }
-
